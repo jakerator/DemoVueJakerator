@@ -1,0 +1,128 @@
+{# extending from AdminLTE theme  ( https://github.com/avanzu/AdminThemeBundle ) #}
+{% extends 'AvanzuAdminThemeBundle:layout:base-layout.html.twig' %}
+
+
+{% block title %}
+    Deposit Station DEMO
+{% endblock %}
+
+{% block page_title %}
+    DS Demo
+{% endblock %}
+{% block page_subtitle %}
+     Showing a Vue.js component working udner bootstrap 3 theme (Admin LTE).
+{% endblock %}
+
+
+
+{% block page_content %}
+    <!-- Default box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Sample Title</h3>
+
+            <div class="box-tools pull-right">
+
+            </div>
+        </div>
+        <div class="box-body">
+
+            <div class="row">
+                <div id="wrapper" class="col-md-9">
+                    <div id="container">
+
+                        {# Show PatientID when this template is used on Patiend page (FOSJsRoutingBundle demo page) #}
+                        {% if patient_id is defined %}
+
+
+                            <h2 style="color:green;">This is a route to Patient Page with ID: <b>{{ patient_id }}</b></h2>
+
+                        {% endif %}
+
+
+                        {# Just s sample content #}
+                        <div id="welcome">
+                            <h1><span>Welcome to</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
+                        </div>
+
+                        <div id="status">
+                            <p>
+                                <svg id="icon-status" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z" fill="#759E1A"/></svg>
+
+                                Your application is now ready. You can start working on it at:
+                                <code>{{ base_dir }}</code>
+                            </p>
+                        </div>
+
+                        <br/><br/>
+                        <p>
+                        <h4>On the right side of this page there is a DS Component, built on Vue.js.</h4> <br>
+                            It has separate TWIG template file, allocated at <code>app/resources/views/default/ds.html.twig</code> <br><br>
+                            All JS code of that component can be found  at <code>web/assets/ds.js</code><br><br>
+                            CSS styles are in <code>web/assets/ds.css</code><br><br>
+
+                        </p>
+                        <br/><br/><br/><br/><br/><br/>
+                        {# and sample content #}
+                    </div>
+                </div>
+
+                    {# Including DS Twig template #}
+                    {{  include('default/ds.html.twig', { 'title': 'DS Component' }) }}
+
+
+            </div>
+
+
+
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            Sample Footer
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+
+
+
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        {# Inline style can be here #}
+    </style>
+
+    {# Main AdminLTE theme styles #}
+    <link rel="stylesheet" href="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/styles/admin-lte-all.css') }}" />
+
+    {# DS component styles #}
+    <link rel="stylesheet" href="{{ asset('assets/ds.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {# Main AdminLTE theme JS #}
+    <script src="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/scripts/admin-lte-all.js') }}"></script>
+
+    {# Vue.js full library #}
+    <script src="https://unpkg.com/vue"></script>
+
+    {# Asios livaryr for handling API calls #}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    {# Loadash library for different tricks like 'Debouncing' #}
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+
+    {# FOSJsRoutingBundle JS #}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+    {# DS Component JS #}
+    <script src="{{ asset('assets/ds.js') }}"></script>
+
+
+
+{% endblock %}

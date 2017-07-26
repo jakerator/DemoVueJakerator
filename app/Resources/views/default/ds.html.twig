@@ -1,0 +1,150 @@
+{# Vue.js APP container#}
+<div class="col-md-3" id="vueApp">
+    {# assigning uniq 'dsid' variable to use separate localstorage for this compenent #}
+    <ds-component dsid="DSComponent1"></ds-component>
+
+</div>
+
+
+{# ds-component template #}
+<script type="text/x-template" id="ds-template">
+
+    <div class="box box-warning box-solid ds-component-box ds-element" >
+        <div class="box-header with-border">
+            <h3 class="box-title">{{ title }} -  {{ '{{' }} currentState.label {{ '}}' }}</h3>
+
+            {# hard-coding navigation (anyway it's pretty simple and small) #}
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="List A-Z" data-id="AZ" data-filter-status="1" v-on:click="changeState"><i class="fa fa-sort-alpha-asc"></i></button>
+                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Groups"  data-id="group" v-on:click="changeState"><i class="fa fa-folder"></i></button>
+                <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Archive" data-id="archive" data-filter-status="0" v-on:click="changeState"><i class="fa fa-archive"></i></button>
+                        </button>
+            </div>
+            <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <transition name="fade" mode="out-in" appear>
+
+                {# Patients list container #}
+                <div v-if="currentState.id === 'AZ'" key="AZ">
+
+                    {# show group filter is set#}
+                    <div v-if="filterGroup && filterGroup!=''">
+                        Showing results from group '<code>{{ '{{' }} filterGroup {{ '}}' }}</code>' &nbsp;
+                        <a href="#" v-on:click="showGroup('');currentState={id:'group',label:'Groups'};">Reset</a>
+                        <br><br>
+                    </div>
+
+
+                    {# Text filer dialog #}
+                    <div class="input-group ds-list-search-box">
+                        <input type="text" name="filterText"  v-model="filterText" placeholder="Search ..." class="form-control">
+                        <span class="input-group-btn"  >
+                        <button type="button" class="btn btn-warning  btn-flat" v-on:click="filterText=''">X</button>
+                      </span>
+                    </div>
+
+                    {# Patients list container, with loading dialog and "load more" button #}
+                    <div class="loading-container">
+                        <div  v-if=" patients && patients.length " class="ds-results-container ds-patients-list">
+                            <patient-item v-for="patient of patients"  v-bind:patient="patient" :key="patient.id"></patient-item>
+
+                            {# Show "Load more" if back-end API returned special offset parameter #}
+                            <div v-if="patientsNextOffset>0">
+                                <button type="button" class="btn btn-block btn-default btn-xs"  v-on:click="loadPatients(patientsNextOffset)" >Load more</button>
+                            </div>
+
+                        </div>
+
+                        {# Loading indicator (showing when results are loading from back-end API #}
+                        <div class="overlay" v-if="loadingState">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+
+                </div>
+                {# end Patients list container #}
+
+                {# Groups list container #}
+                <div v-if="currentState.id === 'group' && groups && groups.length " class="ds-results-container ds-folders-list" key="groups">
+                    <group-item v-for="group of groups"  v-bind:group="group" v-on:setgroup="showGroup" :key="group"></group-item>
+
+
+                </div>
+                {# end Groups list container #}
+
+                {# Archived Patients list container #}
+                <div  v-if=" ( currentState.id === 'archive') && archivedPatients && archivedPatients.length " class="ds-results-container ds-patients-list" key="archive">
+                    <patient-item v-for="patient of archivedPatients"  v-bind:patient="patient" :key="patient.id"></patient-item>
+
+                    <div v-if="archivedPatientsNextOffset>0">
+                        <button type="button" class="btn btn-block btn-default btn-xs"  v-on:click="loadArchivedPatients(archivedPatientsNextOffset)" >Load more</button>
+                    </div>
+                </div>
+                {# end Archived Patients list container #}
+            </transition>
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+
+</script>
+
+
+{# patient-item template #}
+<script type="text/x-template" id="patient-item-template">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                {# patient's name shows as a link, which uses 'FOSJsRoutingBundle' to get a back-end path #}
+                <a v-bind:href="patientRoute">{{ '{{' }} patient.label {{ '}}' }} </a>
+            </h3>
+
+            <div class="box-tools pull-right">
+                {# show/hide details #}
+                <button type="button" class="btn btn-box-tool" v-bind:data-href="'patient-'+patient.id" data-toggle="collapse"><i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        {# details container #}
+        <div class=" collapse" v-bind:id="'patient-'+patient.id">
+            <div class="ds-details">
+                <div >
+                    <span class="glyphicon glyphicon-phone-alt"></span>   {{ '{{' }} patient.details.tel {{ '}}' }}
+                </div>
+                <div >
+                    <span class="glyphicon glyphicon-envelope"></span>   {{ '{{' }} patient.details.email {{ '}}' }}
+                </div>
+                <div >
+                    <span class="fa fa-folder"></span>   {{ '{{' }} patient.group {{ '}}' }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+
+{# group-item template #}
+<script type="text/x-template" id="group-item-template">
+    <div  class="box box-default collapsed-box">
+        <div class="box-header with-border">
+            <h3 class="box-title"><a v-on:click="setGroup" href="#" v-bind:data-group="group">{{ '{{' }} group {{ '}}' }} </a></h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool ds-folder" ><i class="fa fa-folder"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body" style="display: none;">
+
+        </div>
+    </div>
+</script>
+
+
+
+

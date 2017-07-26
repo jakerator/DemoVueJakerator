@@ -1,0 +1,63 @@
+
+#welcome, #status { margin-bottom: 2em; }
+#welcome h1 span { display: block; font-size: 75%; }
+#icon-status, #icon-book { float: left; height: 64px; margin-right: 1em; margin-top: -4px; width: 64px; }
+#icon-book { display: none; }
+
+@media (min-width: 768px) {
+
+    #icon-book { display: inline-block; }
+    #status a, #next a { display: block; }
+
+    @-webkit-keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+    .sf-toolbar { opacity: 0; -webkit-animation: fade-in 1s .2s forwards; animation: fade-in 1s .2s forwards;}
+}
+
+
+
+
+
+.ds-results-container {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.ds-list-search-box {
+    padding-bottom:20px;
+}
+
+.ds-component-box {
+    background-color: #f5f5f5;
+}
+
+
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .3s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0
+}
+
+.component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-to
+    /* .component-fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+}
+
+.loading-container {
+    position: relative;
+}
+.loading-container .overlay {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ds-details {padding:10px;}
