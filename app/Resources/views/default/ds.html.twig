@@ -25,7 +25,7 @@
         <!-- /.box-header -->
         <div class="box-body">
 
-            <transition name="fade" mode="out-in" appear>
+            <transition name="fade" mode="out-in" appear v-on:after-enter="applyJqueryCollapse">
 
                 {# Patients list container #}
                 <div v-if="currentState.id === 'AZ'" key="AZ">

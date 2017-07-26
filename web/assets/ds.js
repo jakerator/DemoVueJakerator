@@ -53,29 +53,7 @@ Vue.component('ds-component', {
 
     },
     updated: function() {
-        /*
-            Jquery code to apply 'collapseble' native Bootstrap CSS feature to "plus" button.
-            Also added some custom code to update "plus/minus" icon
-         */
-
-        $('[data-toggle="collapse"]').click(function(e){
-            e.preventDefault();
-            var target_element= $( '#'+$(this).data('href') );
-            $(target_element).collapse('toggle');
-            expanded = $(target_element).attr("aria-expanded");
-            if (expanded!='true')
-            {
-                $(this).find('i').addClass('fa-plus');
-                $(this).find('i').removeClass('fa-minus');
-            }
-            else
-            {
-                $(this).find('i').addClass('fa-minus');
-                $(this).find('i').removeClass('fa-plus');
-            }
-            return false;
-        });
-
+        this.applyJqueryCollapse();
 
     },
     methods: {
@@ -85,7 +63,7 @@ Vue.component('ds-component', {
         changeState: function(event) {
             target = event.currentTarget;
             this.currentState={ id: target.dataset.id, label: target.dataset.originalTitle}
-
+            //this.applyJqueryCollapse();
 
         },
 
@@ -175,6 +153,32 @@ Vue.component('ds-component', {
             this.filterGroup=group;
             this.loadPatients(0);
             this.currentState={ id:'AZ', 'label': 'List A-Z'};
+        },
+
+        applyJqueryCollapse: function ()
+        {
+            /*
+             Jquery code to apply 'collapseble' native Bootstrap CSS feature to "plus" button.
+             Also added some custom code to update "plus/minus" icon
+             */
+
+            $('[data-toggle="collapse"]').click(function(e){
+                e.preventDefault();
+                var target_element= $( '#'+$(this).data('href') );
+                $(target_element).collapse('toggle');
+                expanded = $(target_element).attr("aria-expanded");
+                if (expanded!='true')
+                {
+                    $(this).find('i').addClass('fa-plus');
+                    $(this).find('i').removeClass('fa-minus');
+                }
+                else
+                {
+                    $(this).find('i').addClass('fa-minus');
+                    $(this).find('i').removeClass('fa-plus');
+                }
+                return false;
+            });
         }
 
 
